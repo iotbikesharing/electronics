@@ -7,9 +7,10 @@
 #define Button 11
 #define AUX 5
 
-SoftwareSerial mySerial(2, 3); //TX, RX
-int num = 20;
+SoftwareSerial mySerial(2, 3); // (2-RX) <<-- Connect TX pin of LoRa  ......  (3-TX) <<-- Connect RX pin of LoRa
 // gnd SET_A and SET_B for Normal Mode (Send and Receive)
+
+int num = 20;
 
 void setup() {
   Serial.begin(9600);
