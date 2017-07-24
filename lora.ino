@@ -2,7 +2,7 @@
 //UM402 (433 MHz UART)
 #include <SoftwareSerial.h>
 
- SoftwareSerial mySerial(2, 3); //TX, RX
+ SoftwareSerial mySerial(2, 3); // (2-RX) <<-- Connect TX pin of LoRa  ......  (3-TX) <<-- Connect RX pin of LoRa
 // gnd SET_A and SET_B for Normal Mode (Send and Receive)
 
 void setup() {
