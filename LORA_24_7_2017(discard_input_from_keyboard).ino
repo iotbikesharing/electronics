@@ -18,32 +18,21 @@ void setup() {
   pinMode (Rx_Led, OUTPUT);
   pinMode (Button,INPUT);
   pinMode (AUX, INPUT);
-  //digitalWrite(Tx_Led, LOW);
+
 }
 
 void loop() {
-
-  
- // if(Serial.available() > 0)
   if (digitalRead (Button) == HIGH) {
     digitalWrite (Tx_Led, HIGH);
-    
-  //Read from serial monitor and send over UM402
-  //  String input = Serial.readString();
     mySerial.println(num);    
     digitalWrite (Tx_Led, LOW);
     //delay (20);
   }
-  
  
-  if(mySerial.available() > 1){//Read from UM402 and send to serial monitor
+  if(mySerial.available() > 1){
     String input = mySerial.readString();
     Serial.println(input);    
-//     if (digitalRead (AUX) == LOW) {
-//       digitalWrite (Rx_Led, HIGH);
-//       //delay (100);
-//      }
-//       digitalWrite (Rx_Led, LOW);
+
   }
   if (digitalRead (AUX) == LOW) {
        digitalWrite (Rx_Led, HIGH);
@@ -52,7 +41,6 @@ void loop() {
   else if (digitalRead (AUX) == HIGH) {
        digitalWrite (Rx_Led, LOW);
   }
-  // Serial.println (digitalRead (AUX));
   
   delay(20);
 }
