@@ -1,0 +1,53 @@
+//Woon Jun Shen
+//UM402 (433 MHz UART)
+
+#include <SoftwareSerial.h>
+#define Tx_Led 9
+#define Rx_Led 10
+#define Button 11
+#define AUX 6
+
+SoftwareSerial mySerial(2, 3); // (2-RX) <<-- Connect TX pin of LoRa  ......  (3-TX) <<-- Connect RX pin of LoRa
+// gnd SET_A and SET_B for Normal Mode (Send and Receive)
+
+String num = "3333";
+
+void setup() {
+  Serial.begin(9600);
+  mySerial.begin(9600);
+  pinMode (Tx_Led, OUTPUT);
+  pinMode (Rx_Led, OUTPUT);
+  pinMode (Button,INPUT);
+  pinMode (AUX, INPUT);
+
+}
+
+void loop() {
+  if (digitalRead (Button) == HIGH) {
+    digitalWrite (Tx_Led, HIGH);
+    mySerial.println(num);    
+    digitalWrite (Tx_Led, LOW);
+    //delay (20);
+  }
+ 
+  if(mySerial.available() > 1){
+    String input = mySerial.readString();
+    Serial.println(input);  
+      if(Serial.readString()=="1"||"20"||"30"){
+         mySerial.println("Bike 2: Receieved");
+  }
+  }
+
+  
+  
+  if (digitalRead (AUX) == LOW) {
+       digitalWrite (Rx_Led, HIGH);
+     //  delay (100);
+      }
+  else if (digitalRead (AUX) == HIGH) {
+       digitalWrite (Rx_Led, LOW);
+  }
+//  Serial.println(digitalRead(AUX));
+  delay(20);
+}
+
