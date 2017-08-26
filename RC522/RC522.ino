@@ -106,13 +106,12 @@ void loop() {
         Serial.print(EEPROM.read(addr));
         Serial.print(" ");
       }
-
+      Serial.println();
     }
 
   }
   Serial.println("----------------------------------------------");
   Serial.println("----------------------------------------------");
-  no = 0;
   Serial.end();
   Serial.begin(9600);
 }
