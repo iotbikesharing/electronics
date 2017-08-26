@@ -19,7 +19,7 @@ int storeduid[10];
 byte value = 0;
 int addr = 0;
 int no = 0;
-
+int uidsize;
 char yn;
 
 void setup() {
@@ -46,7 +46,7 @@ void loop() {
 
   // Show some details of the PICC (that is: the tag/card)
   mfrc522.PICC_DumpDetailsToSerial(&(mfrc522.uid));
-
+  uidsize = mfrc522.uid.size;
   Serial.println();
 
   //Print the UID in DEC and store it into storeduid for comparision
@@ -60,7 +60,7 @@ void loop() {
   Serial.println();
 
   //Print the storeduid to make sure it is correct, will erase it later
-  for (byte i = 0; i < mfrc522.uid.size; i++) {
+  for (int i = 0; i < mfrc522.uid.size; i++) {
     Serial.print(storeduid[i]);
     Serial.print(" ");
   }
@@ -72,37 +72,47 @@ void loop() {
 
   //Ask the users to save the new UID into the system or not
   if (no == -1) {
-    addr = 0;
+
     Serial.println ("Do you want to add this UID into database? \n press (y) for yes or (n) for no");
 
     while (!Serial.available())
-      if (Serial.available()) {
+      if (Serial.available() > 0) {
         yn = Serial.read();
       }
+
     Serial.println(yn);
-    
+
     //If yes, save into the EEPROM
     if (yn == 'y') {
       Serial.println("Saving");
       unsigned int i = 0;
-      for (int k = addr + 4; k < (addr + 4 + mfrc522.uid.size); k++) {
+      for (int k = 4; k < (4 + uidsize); k++) {
         EEPROM.update(k, storeduid[i]);
         i++;
       }
-      //      for (int k = addr + 4; k < (addr + 4 + mfrc522.uid.size); k++) {
-      //        EEPROM.put(k, storeduid[i]);
-      //        i++;
-      //      }
+
+
       Serial.println("Saved");
+      for (addr = 4; addr < 4 + uidsize; addr++) {
+        Serial.print(EEPROM.read(addr));
+        Serial.print(" ");
+      }
+      Serial.println();
     }
-    
     //If no, continue to end of loop
     if (yn == 'n') {
       Serial.println("Sequence terminated");
+      for (addr = 0; addr < 4; addr++) {
+        Serial.print(EEPROM.read(addr));
+        Serial.print(" ");
+      }
+
     }
+
   }
   Serial.println("----------------------------------------------");
   Serial.println("----------------------------------------------");
+  no = 0;
   Serial.end();
   Serial.begin(9600);
 }
@@ -124,19 +134,20 @@ void compare(int *storeduid) {
     }
     //7-byte UID
     if (mfrc522.uid.size == 7) {
-      if ((EEPROM.read(addr + 0) == storeduid[0]) &&
-          (EEPROM.read(addr + 1) == storeduid[1]) &&
-          (EEPROM.read(addr + 2) == storeduid[2]) &&
-          (EEPROM.read(addr + 3) == storeduid[3]) &&
-          (EEPROM.read(addr + 4) == storeduid[4]) &&
-          (EEPROM.read(addr + 5) == storeduid[5]) &&
-          (EEPROM.read(addr + 6) == storeduid[6])) {
+      if (((EEPROM.read(addr + 0) == storeduid[0]) &&
+           (EEPROM.read(addr + 1) == storeduid[1]) &&
+           (EEPROM.read(addr + 2) == storeduid[2]) &&
+           (EEPROM.read(addr + 3) == storeduid[3]) &&
+           (EEPROM.read(addr + 4) == storeduid[4]) &&
+           (EEPROM.read(addr + 5) == storeduid[5]) &&
+           (EEPROM.read(addr + 6) == storeduid[6])
+          ) ) {
         Serial.println("Card in database");
         return addr;
       }
     }
     //If the compare go to the third last value, no match
-    if (addr = 1021) {
+    if (addr == 1021) {
       Serial.println("No match");
       no = -1;
       return ;
