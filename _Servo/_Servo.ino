@@ -8,6 +8,7 @@
 #define Servo_PIN 7
 #define LED_RED 4
 #define LED_GREEN 3
+#define sensorPin  A0
 
 Servo myservo;  // create servo object to control a servo
 MFRC522 mfrc522(SS_PIN, RST_PIN);
@@ -28,7 +29,7 @@ int uidsize;
 char yn;
 int potpin = 0;  // analog pin used to connect the potentiometer
 int val;    // variable to read the value from the analog pin
-
+int sensorValue = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -37,10 +38,12 @@ void setup() {
   mfrc522.PCD_SetAntennaGain(0x07 << 4);
   myservo.attach(Servo_PIN);  // attaches the servo on pin 9 to the servo object
   pinMode(LED_RED, OUTPUT);
+  digitalWrite(LED_RED, HIGH);
 }
 
 
 void loop() {
+  sensorValue = analogRead (sensorPin);
   if ( ! mfrc522.PICC_IsNewCardPresent())
     return;
 
@@ -70,21 +73,26 @@ void loop() {
     digitalWrite(LED_RED, LOW);
     delay(2000);
     myservo.write(val);
-
     digitalWrite(LED_GREEN, HIGH);   // turn the LED on (HIGH is the voltage level)
     delay(1000);                       // wait for a second
     digitalWrite(LED_GREEN, LOW);    // turn the LED off by making the voltage LOW
     delay(1000);
     digitalWrite(LED_GREEN, HIGH);
-
   }
   if ( no == -1) {
     for (int i = 0; i < 5; i++) {
       digitalWrite(LED_RED, LOW);
       delay(1000);
-      digitalWrite(LED_RED, LOW);    // turn the LED off by making the voltage LOW
+      digitalWrite(LED_RED, HIGH);    // turn the LED off by making the voltage LOW
       delay(1000);
     }
+  }
+  if (sensorValue >=820){
+    digitalWrite(LED_GREEN, HIGH);
+  }
+  else{
+    digitalWrite(LED_RED, HIGH);
+    myservo.write(val);
   }
   Serial.println();
   // Halt PICC
