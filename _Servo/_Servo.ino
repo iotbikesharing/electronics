@@ -7,7 +7,7 @@
 #define RST_PIN 9
 #define Servo_PIN 7
 #define LED_RED 4
-#define LED_GREEN 3
+#define LED_GREEN 5
 #define sensorPin  A0
 
 Servo myservo;  // create servo object to control a servo
@@ -38,12 +38,23 @@ void setup() {
   mfrc522.PCD_SetAntennaGain(0x07 << 4);
   myservo.attach(Servo_PIN);  // attaches the servo on pin 9 to the servo object
   pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
   digitalWrite(LED_RED, HIGH);
 }
 
 
 void loop() {
   sensorValue = analogRead (sensorPin);
+  if (sensorValue >=820){
+    digitalWrite(LED_GREEN, HIGH);
+    Serial.println(sensorValue);
+  }
+  else{
+    digitalWrite(LED_GREEN,LOW);
+    digitalWrite(LED_RED, HIGH);
+    myservo.write(val);
+   Serial.println(sensorValue);
+  }
   if ( ! mfrc522.PICC_IsNewCardPresent())
     return;
 
@@ -81,19 +92,15 @@ void loop() {
   }
   if ( no == -1) {
     for (int i = 0; i < 5; i++) {
+      digitalWrite(LED_GREEN, LOW);
       digitalWrite(LED_RED, LOW);
       delay(1000);
       digitalWrite(LED_RED, HIGH);    // turn the LED off by making the voltage LOW
       delay(1000);
+       Serial.println(sensorValue);
     }
   }
-  if (sensorValue >=820){
-    digitalWrite(LED_GREEN, HIGH);
-  }
-  else{
-    digitalWrite(LED_RED, HIGH);
-    myservo.write(val);
-  }
+  
   Serial.println();
   // Halt PICC
   mfrc522.PICC_HaltA();
