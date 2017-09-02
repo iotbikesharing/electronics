@@ -46,13 +46,11 @@ void RFID () {
     if ( ! mfrc522.PICC_ReadCardSerial())
       return;
       
-       for (byte i = 0; i < mfrc522.uid.size; i++) {
-      if (mfrc522.uid.uidByte[i] < 0x10)
-        Serial.print(F(" 0"));
-      else
-        Serial.print(F(" "));
-      Serial.print(mfrc522.uid.uidByte[i], HEX);
-    }
+
+  for (byte i = 0; i < mfrc522.uid.size; i++) {
+    Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
+    Serial.print(mfrc522.uid.uidByte[i], DEC);
+  }
     Serial.println();
     // Halt PICC
     mfrc522.PICC_HaltA();
