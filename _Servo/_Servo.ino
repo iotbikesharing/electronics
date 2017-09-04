@@ -89,18 +89,19 @@ void compare(int *storeduid) {
 void IR() {
   sensorValue = analogRead (sensorPin);
   if (sensorValue >= 900) {
-    val = 0;
+    //val = 0;
     digitalWrite(LED_GREEN, HIGH);
     digitalWrite(LED_RED, LOW);
-    Serial.println(sensorValue);
-    myservo.write(val);
+    //Serial.println(sensorValue);
+    //myservo.write(val);
   }
   else {
     val = 50;
     digitalWrite(LED_GREEN, LOW);
     digitalWrite(LED_RED, HIGH);
+    delay(500);
     myservo.write(val);
-    Serial.println(sensorValue);
+    //Serial.println(sensorValue);
   }
 }
 void RC_Servo() {
@@ -121,11 +122,11 @@ void RC_Servo() {
   Serial.println();
 
   //Print the storeduid to make sure it is correct, will erase it later
-  for (int i = 0; i < mfrc522.uid.size; i++) {
-    Serial.print(storeduid[i]);
-    Serial.print(" ");
-  }
-  Serial.println();
+//  for (int i = 0; i < mfrc522.uid.size; i++) {
+//    Serial.print(storeduid[i]);
+//    Serial.print(" ");
+//  }
+//  Serial.println();
 
   //Compare the storeduid with the values in EEPROM
   compare(storeduid);
@@ -150,7 +151,7 @@ void RC_Servo() {
       digitalWrite(LED_RED, HIGH);    // turn the LED off by making the voltage LOW
       delay(1000);
     }
-    Serial.println(sensorValue);
+    //Serial.println(sensorValue);
   }
 
   Serial.println();
