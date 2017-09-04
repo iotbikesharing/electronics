@@ -28,7 +28,7 @@ int no = 0;
 int uidsize;
 char yn;
 int potpin = 0;  // analog pin used to connect the potentiometer
-int val;    // variable to read the value from the analog pin
+int val=0;    // variable to read the value from the analog pin
 int sensorValue = 0;
 
 void setup() {
@@ -74,6 +74,7 @@ void compare(int *storeduid) {
            (EEPROM.read(addr + 6) == storeduid[6])
           ) ) {
         //     Serial.println("Card in database");
+        no = 1;
         return addr;
       }
     }
@@ -90,13 +91,14 @@ void IR() {
   if (sensorValue >= 820) {
     digitalWrite(LED_GREEN, HIGH);
     digitalWrite(LED_RED, LOW);
-    Serial.println(sensorValue);
+  //  Serial.println(sensorValue);
   }
   else {
+    val = 0;
     digitalWrite(LED_GREEN, LOW);
     digitalWrite(LED_RED, HIGH);
     myservo.write(val);
-    Serial.println(sensorValue);
+   // Serial.println(sensorValue);
   }
 }
 void RC_Servo() {
@@ -126,6 +128,7 @@ void RC_Servo() {
   //Compare the storeduid with the values in EEPROM
   compare(storeduid);
   if (no == 1) {
+    val = 50;
     digitalWrite(LED_RED, LOW);
     delay(2000);
     myservo.write(val);
