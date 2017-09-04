@@ -88,17 +88,19 @@ void compare(int *storeduid) {
 }
 void IR() {
   sensorValue = analogRead (sensorPin);
-  if (sensorValue >= 820) {
+  if (sensorValue >= 900) {
+    val = 50;
     digitalWrite(LED_GREEN, HIGH);
     digitalWrite(LED_RED, LOW);
-  //  Serial.println(sensorValue);
+    Serial.println(sensorValue);
+    myservo.write(val);
   }
   else {
     val = 0;
     digitalWrite(LED_GREEN, LOW);
     digitalWrite(LED_RED, HIGH);
     myservo.write(val);
-   // Serial.println(sensorValue);
+    Serial.println(sensorValue);
   }
 }
 void RC_Servo() {
